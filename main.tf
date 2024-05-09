@@ -39,3 +39,20 @@ module "aws_alb_controller" {
   oidc_provider_arn = module.eks.oidc_provider_arn
 }
 
+################################################################################
+# HPA Deploy
+################################################################################
+
+resource "helm_release" "metrics-server" {
+    name       = "metrics-server"
+
+    repository = "https://kubernetes-sigs.github.io/metrics-server/"
+    chart      = "metrics-server"
+    namespace  = "kube-system"
+    version    = "3.12.1"
+
+    set {
+        name   = "replicas"
+        value  = 2
+    }
+}
